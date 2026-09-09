@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: spade-natural-selection
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python hostAgent.py
+    envVars:
+      - key: PORT
+        value: 10000
+    healthCheckPath: /fishes

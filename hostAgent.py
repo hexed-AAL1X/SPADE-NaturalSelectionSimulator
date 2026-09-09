@@ -213,10 +213,11 @@ class HostAgent(Agent):
         # añadir comportamiento para recibir estados de las criaturas (se espera que las criaturas también reporten al host)
         self.add_behaviour(self.RecvBehav())
         # iniciar el servidor web en segundo plano pronto para que la UI pueda conectarse y el host reciba notificaciones de eliminación
-        asyncio.create_task(self._start_web(port=10000))
+        web_port = int(os.environ.get("PORT", 10000))
+        asyncio.create_task(self._start_web(port=web_port))
 
         # crear GenerationAgent después de registrar los behaviours del host para evitar perder mensajes
-        gen = GenerationAgent("generation@localhost", cfg.generation_password, num_initial=cfg.num_initial, food_count=cfg.food_count, space_size=cfg.space_size, max_generations=cfg.max_generations)
+        gen = GenerationAgent("generation@localhost", cfg.generation_password, num_initial=cfg.num_initial, food_count=cfg.food_count, space_size=cfg.space_size, max_generations=cfg.max_generations, verify_security=False)
         # asegurar que GenerationAgent use la misma configuración completa (detection_radius, energy cost, etc.)
         gen.config = cfg
         # indicar a generation cómo contactar al host para actualizaciones del frontend
@@ -241,7 +242,7 @@ async def main():
                 except Exception as e:
                     print(f"Warning: Could not clean {csv_file}: {e}")
     
-    host = HostAgent('host@localhost', '123456abcd.')
+    host = HostAgent('host@localhost', '123456abcd.', verify_security=False)
     await host.start()
     print("Host agent started")
     try:
@@ -261,4 +262,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    spade.run(main())
+    from spade.container import run_container
+    run_container(main(), embedded_xmpp_server=True)

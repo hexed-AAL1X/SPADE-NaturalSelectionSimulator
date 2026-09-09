@@ -139,7 +139,7 @@ class GenerationAgent(Agent):
             jid_base = f"creature{self.generation}_{i}"
             jid = f"{jid_base}@localhost"
             passwd = "123456abcd."
-            agent = CreatureAgent(jid, passwd)
+            agent = CreatureAgent(jid, passwd, verify_security=False)
             agent.init_speed = speed
             agent.init_energy = energy
             agent.init_size = size
