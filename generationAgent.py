@@ -24,8 +24,8 @@ class GenerationAgent(Agent):
     - Controla fin de generación y crea la siguiente
     """
 
-    def __init__(self, jid, password, num_initial=10, food_count=30, space_size=(100, 100), max_generations=10):
-        super().__init__(jid, password)
+    def __init__(self, jid, password, num_initial=10, food_count=30, space_size=(100, 100), max_generations=10, verify_security=False):
+        super().__init__(jid, password, verify_security=verify_security)
         self.num_initial = num_initial
         self.food_count = food_count
         self.space_size = space_size
